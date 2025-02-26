@@ -22,9 +22,52 @@ export default {
 </script>
 
 <style scoped>
-.menu { position: relative; display: inline-block; }
-.menu-button { background: none; border: none; font-size: 18px; cursor: pointer; }
-.menu-options { position: absolute; right: 0; background: white; border: 1px solid #ddd; list-style: none; padding: 5px; }
-.menu-options li { padding: 5px; cursor: pointer; }
-.menu-options li:hover { background: #f0f0f0; }
+:root{
+  --main_green:#118B50;
+  --main_lime:#E3F0AF;
+  --main_dar:#FBF6E9;
+}
+
+
+.menu {
+  position: relative;
+  display: inline-block;
+}
+
+
+.menu-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  position: absolute;
+  right: 0;
+  top: -5px;
+}
+
+
+.menu-options {
+  position: absolute;
+  right: 0;
+  background-color: black;
+  border: 1px solid #ddd;
+  list-style: none;
+  padding: 5px;
+  min-width: 80px;
+  text-align: left;
+  z-index: 10;
+}
+
+.menu-options li {
+  padding: 5px;
+  cursor: pointer;
+  color: white;
+}
+
+
+.menu-options li:hover {
+  background: #f0f0f0;
+  color: black;
+}
 </style>

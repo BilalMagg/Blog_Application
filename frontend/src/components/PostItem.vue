@@ -1,8 +1,10 @@
 <template>
   <div class="post">
-    <h3>{{ post.title }}</h3>
+    <div class="post-header">
+      <h3>{{ post.title }}</h3>
+      <PostMenu @edit="$emit('edit', post)" @delete="$emit('delete', post.id)" />
+    </div>
     <p>{{ post.content }}</p>
-    <PostMenu @edit="$emit('edit', post)" @delete="$emit('delete', post.id)" />
   </div>
 </template>
 
@@ -16,5 +18,29 @@ export default {
 </script>
 
 <style scoped>
-.post { padding: 15px; border: 1px solid #ddd; margin-bottom: 10px; border-radius: 5px; }
+:root{
+  --main_green:#118B50;
+  --main_lime:#E3F0AF;
+  --main_dar:#FBF6E9;
+}
+
+.post {
+  position: relative;
+  padding: 15px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+
+.post-header {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
 </style>
