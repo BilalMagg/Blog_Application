@@ -1,53 +1,72 @@
 // /backend/controllers/postController.js
-let mockPosts = [
-    { id: 1, user_id: 1, title: 'Premier Article', content: 'Contenu du premier article', status: 'published', created_at: new Date(), updated_at: new Date() },
-    { id: 2, user_id: 1, title: 'Deuxième Article', content: 'Contenu du deuxième article', status: 'draft', created_at: new Date(), updated_at: new Date() },
-  ];
-  let nextId = 3;
-  
-  const createPost = (req, res) => {
+const { Posts } = require('../models'); // Importe le modèle Posts
+
+const createPost = async (req, res) => {
+  try {
     const { title, content, status } = req.body;
-    const userId = req.user?.id || 1; // Simule un user_id (par exemple, 1 pour un utilisateur fictif)
-    const newPost = {
-      id: nextId++,
-      user_id: userId,
+    const userId = req.user?.id; // Récupère l'ID de l'utilisateur authentifié via authMiddleware
+    if (!userId) return res.status(401).json({ message: 'Utilisateur non authentifié' });
+
+    const newPost = await Posts.create({
       title,
       content,
+      user_id: userId,
       status: status || 'draft',
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
-    mockPosts.push(newPost);
+    });
     res.status(201).json(newPost);
-  };
-  
-  const getAllPosts = (req, res) => {
-    res.status(200).json(mockPosts);
-  };
-  
-  const getPostById = (req, res) => {
-    const post = mockPosts.find(p => p.id === parseInt(req.params.id));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getAllPosts = async (req, res) => {
+  try {
+    const posts = await Posts.findAll();
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getPostById = async (req, res) => {
+  try {
+    const post = await Posts.findByPk(req.params.id);
     if (!post) return res.status(404).json({ message: 'Article non trouvé' });
     res.status(200).json(post);
-  };
-  
-  const updatePost = (req, res) => {
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const updatePost = async (req, res) => {
+  try {
     const { title, content, status } = req.body;
-    const postIndex = mockPosts.findIndex(p => p.id === parseInt(req.params.id));
-    if (postIndex === -1) return res.status(404).json({ message: 'Article non trouvé' });
-    // Simule une vérification d’autorisation (par exemple, user_id doit correspondre)
-    if (mockPosts[postIndex].user_id !== req.user?.id) return res.status(403).json({ message: 'Non autorisé' });
-    mockPosts[postIndex] = { ...mockPosts[postIndex], title, content, status, updated_at: new Date() };
-    res.status(200).json(mockPosts[postIndex]);
-  };
-  
-  const deletePost = (req, res) => {
-    const postIndex = mockPosts.findIndex(p => p.id === parseInt(req.params.id));
-    if (postIndex === -1) return res.status(404).json({ message: 'Article non trouvé' });
-    // Simule une vérification d’autorisation
-    if (mockPosts[postIndex].user_id !== req.user?.id) return res.status(403).json({ message: 'Non autorisé' });
-    mockPosts.splice(postIndex, 1);
+    const post = await Posts.findByPk(req.params.id);
+    if (!post) return res.status(404).json({ message: 'Article non trouvé' });
+    if (post.user_id !== req.user?.id) return res.status(403).json({ message: 'Non autorisé' });
+
+    await post.update({
+      title,
+      content,
+      status,
+    });
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const deletePost = async (req, res) => {
+  try {
+    const post = await Posts.findByPk(req.params.id);
+    if (!post) return res.status(404).json({ message: 'Article non trouvé' });
+    if (post.user_id !== req.user?.id) return res.status(403).json({ message: 'Non autorisé' });
+
+    await post.destroy();
     res.status(204).send();
-  };
-  
-  module.exports = { createPost, getAllPosts, getPostById, updatePost, deletePost };
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { createPost, getAllPosts, getPostById, updatePost, deletePost };
