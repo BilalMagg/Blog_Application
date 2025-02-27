@@ -15,7 +15,7 @@ module.exports = {
         references: {
           model: 'Users', 
           key: 'id'
-      },
+        },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
@@ -44,15 +44,17 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
+
     await queryInterface.addConstraint('Votes', {
       fields: ['user_id', 'post_id'],
       type: 'unique',
       name: 'unique_user_post_vote'
     });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Votes');
   }
