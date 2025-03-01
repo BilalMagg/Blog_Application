@@ -1,23 +1,34 @@
 <template>
-  <div id="app">
-   <NavBar /> 
-    <h1>Bienvenue sur le Blog</h1>
-  </div>
-</template>
-
-<script>
-import NavBar from "./components/NavBar.vue";
-
-export default {
-  components: {
-    NavBar,
-  },
-};
-</script>
-
-<style>
-#app {
-  text-align: center;
-  margin-top: 20px;
-}
-</style>
+    <div id="app">
+      <SignIn />
+    </div>
+  </template>
+  
+  <script>
+  import SignIn from './components/SignIn.vue';
+  
+  export default {
+    name: 'app',
+    components: {
+      SignIn,
+    }
+  }
+  </script>
+  
+  <style lang="scss">
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  
+    #app {
+      font-family: Tahoma;
+      font-size: 1.6rem;
+      color: #ffffff;
+      background-color: #EAEAEA;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
