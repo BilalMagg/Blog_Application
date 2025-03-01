@@ -1,8 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const postController = require('../controllers/postController');
+const commentController = require('./controllers/commentControllers');
 
-router.get('/posts/:id', postController.getAllComments);
-router.get('/posts/:id/users/:id', postController.getPostById);
-router.put('/:id', authMiddleware, postController.updatePost);
-router.delete('/:id', authMiddleware, postController.deletePost);
+
+router.post('/post/:id/user/:id', commentController.Createcomment);
+router.get('/', commentController.getAllComments);
+router.get('/post/:id', commentController.getAllCommentsbypost);
+router.get('/user/:id', commentController.getCommentbyuser);
+router.get('/post/:id/user/:id', commentController.getcommentbyPostandUser);
+router.get('/post/:id', commentController.sortCommentbyTime);
+router.delete('/', commentController.deleteAllcomment);
+router.delete('/post/:id', commentController.deletecommentsbypost);
+router.delete('/user/:id', commentController.deletecommentsbyuser);
+router.delete('/post/:id/user/:id', commentController.deletecommentbypostuser);
+router.put('/post/:id/user/:id', commentController.updatecommentsbyUserandPost);
+router.put('/post/:id', commentController.basculeComments)//activer ou desactiver les commentaires
+
+
+module.exports = router;
