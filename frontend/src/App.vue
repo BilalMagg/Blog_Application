@@ -1,34 +1,39 @@
 <template>
-    <div id="app">
-      <SignIn />
-    </div>
-  </template>
-  
-  <script>
-  import SignIn from './components/SignIn.vue';
-  
-  export default {
-    name: 'app',
-    components: {
-      SignIn,
-    }
-  }
-  </script>
-  
-  <style lang="scss">
-    body {
-      margin: 0;
-      padding: 0;
-    }
-  
-    #app {
-      font-family: Tahoma;
-      font-size: 1.6rem;
-      color: #ffffff;
-      background-color: #EAEAEA;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  </style>
+  <div>
+    <nav class="nav-bar">
+      <router-link to="/create" class="nav-link">Create Post</router-link>
+    </nav>
+    <router-view />
+  </div>
+</template>
+
+<script>
+export default {
+  name: "App",
+};
+</script>
+
+<style>
+body {
+  background-color: #FBF6E9;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 20px;
+  background: transparent;
+}
+
+.nav-link {
+  font-size: 18px;
+  font-weight: bold;
+  color: green;
+  text-decoration: none;
+  padding: 10px 15px;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+</style>
