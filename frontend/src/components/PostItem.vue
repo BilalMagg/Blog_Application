@@ -1,37 +1,30 @@
 <template>
   <div class="post">
-    <!-- Post Header (Title + Menu) -->
     <div class="post-header">
       <h3 class="post-title">{{ post.title }}</h3>
-      <PostMenu @edit="editPost" @delete="deletePost" />
+      <PostMenu @edit="$emit('edit', post)" @delete="$emit('delete', post.id)" />
     </div>
-
     <hr class="divider" />
     <p class="post-content">{{ post.content }}</p>
 
-    <!-- Votes Section -->
-    <div class="votes">
-      <button @click="vote(1)" :class="{ active: post.userVote === 1 }">👍 {{ post.votes }}</button>
-      <button @click="vote(-1)" :class="{ active: post.userVote === -1 }">👎</button>
+    <!-- Like & Dislike Buttons -->
+    <div class="vote-section">
+      <button @click="vote(1)" :class="{ active: userVote === 1 }">👍 {{ likes }}</button>
+      <button @click="vote(-1)" :class="{ active: userVote === -1 }">👎 {{ dislikes }}</button>
     </div>
 
-    <!-- Show Comments Button -->
-    <button class="toggle-comments-btn" @click="toggleComments">
-      {{ showComments ? "Hide Comments" : "Show Comments" }}
+    <!-- Toggle Comments Button -->
+    <button class="toggle-comments" @click="toggleComments">
+      {{ showComments ? "Hide Comments" : "View Comments" }} ({{ comments.length }})
     </button>
 
-    <!-- Comments Section (Hidden by Default) -->
+    <!-- Comments Section -->
     <div v-if="showComments" class="comments-section">
-      <h4>Comments</h4>
-      <div v-for="comment in post.comments" :key="comment.id" class="comment">
-        <p><strong>{{ comment.username }}:</strong> {{ comment.content }}</p>
+      <div v-for="(comment, index) in comments" :key="index" class="comment">
+        <p>{{ comment }}</p>
       </div>
-
-      <!-- Add Comment -->
-      <div class="add-comment">
-        <input v-model="newComment" placeholder="Write a comment..." />
-        <button @click="addComment">💬 Comment</button>
-      </div>
+      <input v-model="newComment" type="text" placeholder="Write a comment..." @keyup.enter="addComment" />
+      <button @click="addComment">Add Comment</button>
     </div>
   </div>
 </template>
@@ -44,69 +37,63 @@ export default {
   components: { PostMenu },
   data() {
     return {
-      newComment: "",
       showComments: false,
+      newComment: "",
+      comments: JSON.parse(localStorage.getItem(`comments-${this.post.id}`)) || [],
+      likes: JSON.parse(localStorage.getItem(`likes-${this.post.id}`)) || 0,
+      dislikes: JSON.parse(localStorage.getItem(`dislikes-${this.post.id}`)) || 0,
+      userVote: JSON.parse(localStorage.getItem(`vote-${this.post.id}`)) || 0
     };
   },
   methods: {
-    editPost() {
-      this.$emit("edit", this.post);
-    },
-    deletePost() {
-      this.$emit("delete", this.post.id);
-    },
-    vote(value) {
-      if (this.post.userVote === value) {
-        this.post.votes -= value;
-        this.post.userVote = 0;
-      } else {
-        this.post.votes += value - (this.post.userVote || 0);
-        this.post.userVote = value;
-      }
-      this.$emit("update", this.post);
-    },
     toggleComments() {
       this.showComments = !this.showComments;
     },
     addComment() {
       if (!this.newComment.trim()) return;
-      const newComment = {
-        id: Date.now(),
-        username: "Guest",
-        content: this.newComment,
-      };
-      this.post.comments.push(newComment);
+      this.comments.push(this.newComment);
+      localStorage.setItem(`comments-${this.post.id}`, JSON.stringify(this.comments));
       this.newComment = "";
-      this.$emit("update", this.post);
     },
-  },
+    vote(value) {
+      if (this.userVote === value) {
+        this.userVote = 0;
+        value === 1 ? this.likes-- : this.dislikes--;
+      } else {
+        if (this.userVote !== 0) {
+          this.userVote === 1 ? this.likes-- : this.dislikes--;
+        }
+        this.userVote = value;
+        value === 1 ? this.likes++ : this.dislikes++;
+      }
+      localStorage.setItem(`vote-${this.post.id}`, JSON.stringify(this.userVote));
+      localStorage.setItem(`likes-${this.post.id}`, JSON.stringify(this.likes));
+      localStorage.setItem(`dislikes-${this.post.id}`, JSON.stringify(this.dislikes));
+    }
+  }
 };
 </script>
 
 <style scoped>
-:root {
-  --main-green: #118b50;
-  --main-light: #e3f0af;
-  --main-dark: #fbf6e9;
-}
-
+/* Post Styling */
 .post {
   position: relative;
   max-width: 650px;
   width: 90%;
   margin: 20px auto;
   padding: 20px;
+  border: 1px solid #ddd;
   border-radius: 8px;
   background-color: white;
   box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
+  text-align: left;
 }
-
 .post:hover {
   transform: translateY(-2px);
 }
 
-
+/* Post Header */
 .post-header {
   display: flex;
   justify-content: space-between;
@@ -114,7 +101,7 @@ export default {
   width: 100%;
 }
 
-
+/* Title Styling */
 .post-title {
   font-size: 22px;
   font-weight: bold;
@@ -123,13 +110,7 @@ export default {
   padding-bottom: 5px;
 }
 
-
-.post-header .menu {
-  position: relative;
-  margin-left: auto;
-}
-
-
+/* Divider */
 .divider {
   border: none;
   height: 2px;
@@ -142,78 +123,78 @@ export default {
   font-size: 16px;
   color: #444;
   line-height: 1.6;
-  text-align: justify;
+  text-align: left;
 }
 
-/* Votes */
-.votes {
+/* Like & Dislike Buttons */
+.vote-section {
   display: flex;
+  align-items: center;
   gap: 10px;
   margin-top: 10px;
 }
-
-.votes button {
+.vote-section button {
   background: none;
-  border: 1px solid gray;
-  padding: 5px 10px;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
 }
-
-.votes button.active {
+.vote-section button:hover {
+  background: #eee;
+}
+.vote-section .active {
   background: green;
   color: white;
+  border: 1px solid darkgreen;
 }
 
-
-.toggle-comments-btn {
-  margin-top: 10px;
-  background: none;
-  border: 1px solid green;
-  color: green;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.toggle-comments-btn:hover {
-  background: green;
-  color: white;
-}
-
-
+/* Comments Section */
 .comments-section {
   margin-top: 15px;
   padding: 10px;
   background: #f9f9f9;
   border-radius: 5px;
+  border: 1px solid #ddd;
 }
-
 .comment {
-  background: white;
   padding: 5px;
-  border-radius: 5px;
+  border-bottom: 1px solid #ddd;
+}
+.comment:last-child {
+  border-bottom: none;
+}
+
+/* Input and Button */
+input {
+  width: 100%;
+  padding: 8px;
   margin-top: 5px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
-
-
-.add-comment {
-  display: flex;
-  gap: 5px;
-  margin-top: 10px;
-}
-
-.add-comment input {
-  width: 80%;
-  padding: 5px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.add-comment button {
+button {
+  margin-top: 5px;
+  padding: 6px 10px;
+  border: none;
   background: green;
   color: white;
-  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+button:hover {
+  background: darkgreen;
+}
+.toggle-comments {
+  margin-top: 10px;
+  background: transparent;
+  color: green;
   border: none;
   cursor: pointer;
+  font-size: 14px;
+}
+.toggle-comments:hover {
+  text-decoration: underline;
 }
 </style>

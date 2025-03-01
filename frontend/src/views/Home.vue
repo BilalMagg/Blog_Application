@@ -38,7 +38,7 @@ export default {
 };
 </script>
 <style scoped>
-/* Container Styling */
+
 .home-container {
   max-width: 700px;
   margin: 0 auto;
@@ -46,7 +46,7 @@ export default {
   text-align: center;
 }
 
-/* Header (Blog Posts) */
+
 .home-title {
   font-size: 32px;
   font-weight: bold;
