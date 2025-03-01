@@ -22,7 +22,6 @@ body {
   display: flex;
   justify-content: flex-end;
   padding: 15px 20px;
-  background: transparent;
 }
 
 .nav-link {

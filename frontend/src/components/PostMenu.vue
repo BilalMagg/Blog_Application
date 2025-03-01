@@ -22,30 +22,34 @@ export default {
 </script>
 
 <style scoped>
-:root{
-  --main_green:#118B50;
-  --main_lime:#E3F0AF;
-  --main_dar:#FBF6E9;
-}
 .menu {
-   position: relative; display: inline-block;
-   right:30px;
-   left:auto; 
-   
-  
-  }
+  position: relative;
+  display: inline-block;
+}
+
 .menu-button {
-  position:relative;
-   background: none; border: none; font-size: 18px; cursor: pointer; 
-   top:5px;
-   right:0px;
-   
-  }
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
 .menu-options {
-   position: absolute; right: 0; background-color: var(--main_green); border: 1px solid #ddd; list-style: none; padding: 5px; 
-  }
+  position: absolute;
+  right: 0;
+  background-color: green;
+  color: white;
+  border: 1px solid #ddd;
+  list-style: none;
+  padding: 5px;
+}
+
 .menu-options li {
-   padding: 5px; cursor: pointer; 
-  }
-.menu-options li:hover { background: #f0f0f0; }
+  padding: 5px;
+  cursor: pointer;
+}
+
+.menu-options li:hover {
+  background: #f0f0f0;
+}
 </style>
