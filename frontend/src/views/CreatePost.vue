@@ -25,12 +25,12 @@ export default {
       let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
       if (this.isEditing) {
-        // ✅ Update existing post
+       
         posts = posts.map(post =>
           post.id === this.newPost.id ? this.newPost : post
         );
       } else {
-        // ✅ Create new post
+       
         this.newPost.id = Date.now();
         posts.unshift(this.newPost);
       }

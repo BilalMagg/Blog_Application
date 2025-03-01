@@ -6,7 +6,7 @@ import CreatePost from "@/views/CreatePost.vue";
 const routes = [
   { path: "/", component: Home },
   { path: "/create", component: CreatePost },
-  { path: "/edit/:id", component: CreatePost } // ✅ Allows editing a post by ID
+  { path: "/edit/:id", component: CreatePost } 
 ];
 
 const router = createRouter({
