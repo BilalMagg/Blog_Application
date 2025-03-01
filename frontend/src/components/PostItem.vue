@@ -166,7 +166,7 @@ export default {
   border-bottom: none;
 }
 
-/* Input and Button */
+
 input {
   width: 100%;
   padding: 8px;

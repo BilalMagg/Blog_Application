@@ -20,7 +20,7 @@ body {
 
 .nav-bar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   padding: 15px 20px;
 }
 
