@@ -15,4 +15,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  test: {
+    globals: true,        // Active le mode global pour Vitest
+    environment: 'jsdom', // Utilise jsdom pour simuler un navigateur
+    setupFiles: './tests/setup.js', // Ajoute un fichier de configuration pour les tests
+  },
 })

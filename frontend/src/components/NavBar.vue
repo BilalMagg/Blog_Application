@@ -31,13 +31,13 @@
 
       <!-- Avatar utilisateur avec menu -->
       <div class="avatar-container">
-        <button @click.stop="toggleDropdown" class="avatar">
+        <button @click.stop="toggleDropdown" class="avatar" data-testid="avatar">
         <!-- <img src="@/assets/user-avatar.jpg" alt="User" class="avatar"> --> 
          
         </button>
 
         <!-- Menu déroulant -->
-        <div v-if="dropdownOpen" class="dropdown-menu">
+        <div v-if="dropdownOpen" class="dropdown-menu" data-testid="dropdown-menu">
           <a href="#" class="dropdown-item">Profile</a>
           <a href="#" class="dropdown-item">Settings</a>
           <a href="#" class="dropdown-item logout">Logout</a>
@@ -47,8 +47,8 @@
     
     <template v-else>
       <!-- Boutons Register et Login -->
-      <button class="register-button">➜ Register</button>
-      <button class="login-button">Login</button>
+      <a href="SignIn.vue"><button class="register-button">➜ Register</button></a>
+      <a href="SignIn.vue"><button class="login-button">Login</button></a>
     </template>
     </div>
   </nav>
@@ -64,10 +64,7 @@ export default {
   setup() {
     // État du menu déroulant
     const dropdownOpen = ref(false);
-
-  const isAuthenticated = ref(false);
-
-
+    const isAuthenticated = ref(false);
 
     // Fonction pour basculer l'affichage du menu
     const toggleDropdown = () => {
@@ -91,7 +88,7 @@ export default {
       document.removeEventListener("click", closeDropdown);
     });
 
-    return { dropdownOpen, toggleDropdown };
+    return { dropdownOpen, toggleDropdown, toggleDropdown };
   },
 };
 </script>
