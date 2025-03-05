@@ -19,33 +19,59 @@ export default {
   components: { PostItem },
   data() {
     return {
-      posts: JSON.parse(localStorage.getItem("posts")) || []
+      posts: []
     };
   },
   methods: {
+    async fetchPosts() {
+      try {
+        const response = await fetch("http://localhost:3000/posts");
+        if (!response.ok) throw new Error("Failed to fetch from backend");
+        this.posts = await response.json();
+      } catch (error) {
+        console.error("Backend unavailable, using localStorage");
+        this.posts = JSON.parse(localStorage.getItem("posts")) || [];
+      }
+    },
+
     handleEdit(post) {
       this.$router.push(`/edit/${post.id}`);
     },
-    handleDelete(postId) {
-      this.posts = this.posts.filter(post => post.id !== postId);
-      localStorage.setItem("posts", JSON.stringify(this.posts));
+
+    async handleDelete(postId) {
+      try {
+        const response = await fetch(`http://localhost:3000/posts/${postId}`, {
+          method: "DELETE"
+        });
+
+        if (!response.ok) throw new Error("Failed to delete post");
+        this.posts = this.posts.filter(post => post.id !== postId);
+      } catch (error) {
+        console.error("Backend unavailable, deleting from localStorage");
+        this.posts = this.posts.filter(post => post.id !== postId);
+        localStorage.setItem("posts", JSON.stringify(this.posts));
+      }
     },
+
     updatePost(updatedPost) {
       this.posts = this.posts.map(post => (post.id === updatedPost.id ? updatedPost : post));
       localStorage.setItem("posts", JSON.stringify(this.posts));
     }
   },
+
+  mounted() {
+    this.fetchPosts();
+  }
 };
 </script>
-<style scoped>
 
+<style scoped>
 .home-container {
   max-width: 700px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
 }
-
 
 .home-title {
   font-size: 32px;
