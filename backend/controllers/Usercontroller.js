@@ -20,7 +20,7 @@ const registerUser=async (req,res)=>{
   password_hash:hashedpassword,
   role
  });
- return res.status(201).json({message: "User created successfully"});
+ return res.status(201).json({message: "User created successfully",user: newuser});
 }catch(err){
   return res.status(500).json({message: "server error"});
 }
@@ -74,3 +74,4 @@ const getallUserProfile=async (req,res)=>{
   res.status(500).json({ message: "server error"});
  }
 }
+module.exports={registerUser, loginUser, getUserProfile, getallUserProfile}; 
