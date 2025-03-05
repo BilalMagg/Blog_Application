@@ -19,19 +19,44 @@ export default {
     };
   },
   methods: {
-    uploadPost() {
+    async uploadPost() {
       if (!this.newPost.title || !this.newPost.content) return;
 
       let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
       if (this.isEditing) {
-        posts = posts.map(post => post.id === this.newPost.id ? this.newPost : post);
+        try {
+          const response = await fetch(`http://localhost:3000/posts/${this.newPost.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(this.newPost)
+          });
+
+          if (!response.ok) throw new Error("Backend update failed");
+
+        } catch (error) {
+          console.error("Backend unavailable, updating in localStorage");
+          posts = posts.map(post => (post.id === this.newPost.id ? this.newPost : post));
+          localStorage.setItem("posts", JSON.stringify(posts));
+        }
       } else {
-        this.newPost.id = Date.now();
-        posts.unshift(this.newPost);
+        this.newPost.id = Date.now(); // Generate unique ID for localStorage
+        try {
+          const response = await fetch("http://localhost:3000/posts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(this.newPost)
+          });
+
+          if (!response.ok) throw new Error("Backend create failed");
+
+        } catch (error) {
+          console.error("Backend unavailable, saving to localStorage");
+          posts.unshift(this.newPost);
+          localStorage.setItem("posts", JSON.stringify(posts));
+        }
       }
 
-      localStorage.setItem("posts", JSON.stringify(posts));
       this.$router.push("/");
     },
 

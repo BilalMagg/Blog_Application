@@ -20,7 +20,6 @@ export default {
   components: { PostItem },
   data() {
     return {
-
       posts: []
     };
   },
@@ -64,18 +63,16 @@ export default {
   mounted() {
     this.fetchPosts();
   }
-
 };
 </script>
-<style scoped>
 
+<style scoped>
 .home-container {
   max-width: 700px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
 }
-
 
 .home-title {
   font-size: 32px;

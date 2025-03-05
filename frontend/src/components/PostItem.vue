@@ -49,13 +49,26 @@ export default {
     toggleComments() {
       this.showComments = !this.showComments;
     },
-    addComment() {
+
+    async addComment() {
       if (!this.newComment.trim()) return;
       this.comments.push(this.newComment);
       localStorage.setItem(`comments-${this.post.id}`, JSON.stringify(this.comments));
+
+      try {
+        await fetch(`http://localhost:3000/posts/${this.post.id}/comments`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: this.newComment })
+        });
+      } catch (error) {
+        console.error("Backend unavailable, comment saved in localStorage");
+      }
+
       this.newComment = "";
     },
-    vote(value) {
+
+    async vote(value) {
       if (this.userVote === value) {
         this.userVote = 0;
         value === 1 ? this.likes-- : this.dislikes--;
@@ -66,9 +79,20 @@ export default {
         this.userVote = value;
         value === 1 ? this.likes++ : this.dislikes++;
       }
+
       localStorage.setItem(`vote-${this.post.id}`, JSON.stringify(this.userVote));
       localStorage.setItem(`likes-${this.post.id}`, JSON.stringify(this.likes));
       localStorage.setItem(`dislikes-${this.post.id}`, JSON.stringify(this.dislikes));
+
+      try {
+        await fetch(`http://localhost:3000/posts/${this.post.id}/vote`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ vote: this.userVote })
+        });
+      } catch (error) {
+        console.error("Backend unavailable, vote saved in localStorage");
+      }
     }
   }
 };
@@ -166,7 +190,6 @@ export default {
   border-bottom: none;
 }
 
-/* Input and Button */
 input {
   width: 100%;
   padding: 8px;
