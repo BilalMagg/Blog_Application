@@ -1,5 +1,6 @@
 <template>
 
+
   <div>
     <!-- Navigation Bar (Includes Create Post Button) -->
     <NavBar />

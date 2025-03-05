@@ -2,9 +2,11 @@
   <nav class="navbar">
     <!-- Logo et nom -->
     <div class="logo-container">
+
       <router-link to="/" ><i class="fa-solid fa-house"  ></i></router-link>
     </div>
   
+
 
     <!-- Actions utilisateur -->
     <div class="actions">
@@ -26,6 +28,7 @@
 
       <!-- Avatar utilisateur avec menu -->
       <div class="avatar-container">
+
         <button @click.stop="toggleDropdown" class="avatar" data-testid="avatar">
         <!-- <img src="@/assets/user-avatar.jpg" alt="User" class="avatar"> --> 
          
@@ -46,8 +49,10 @@
     
     <template v-else>
       <!-- Boutons Register et Login -->
+
       <router-link to="/SignIn"><button class="register-button">➜ Register</button></router-link>
       <router-link to="/SignIn"><button class="login-button">Login</button></router-link>
+
     </template>
     </div>
   </nav>
@@ -64,7 +69,9 @@ export default {
   setup() {
     // État du menu déroulant
     const dropdownOpen = ref(false);
+
     const isAuthenticated = ref(false);
+
 
     // Fonction pour basculer l'affichage du menu
     const toggleDropdown = () => {
@@ -88,7 +95,9 @@ export default {
       document.removeEventListener("click", closeDropdown);
     });
 
+
     return { dropdownOpen, toggleDropdown, isAuthenticated };
+
   },
 };
 </script>
@@ -96,6 +105,7 @@ export default {
 
 <style scoped>
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css");
+
 
 /* Styles généraux de la navbar */
 .navbar {
@@ -199,16 +209,20 @@ export default {
   color: #4A5568;
 }
 
+
 i{
   font-size: 25px;
   color: black;
 }
+
 .notification-badge {
   position: absolute;
   top: 0;
   right: 0;
   background: red;
+
   opacity: 0.8;
+
   color: white;
   font-size: 12px;
   width: 16px;
@@ -254,8 +268,10 @@ i{
 }
 .logout {
   color: red;
+
   text-decoration: none;
   display: block;
   padding: 8px 16px;
 }
 </style>
+

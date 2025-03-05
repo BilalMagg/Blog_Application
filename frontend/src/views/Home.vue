@@ -1,13 +1,17 @@
 <template>
+
   <div class="home-container">
     <h1 class="home-title">📖 Blog Posts</h1>
+
     <PostItem 
       v-for="post in posts" 
       :key="post.id" 
       :post="post" 
       @edit="handleEdit" 
       @delete="handleDelete"
+
       @update="updatePost"
+
     />
   </div>
 </template>
@@ -15,10 +19,12 @@
 <script>
 import PostItem from "../components/PostItem.vue";
 
+
 export default {
   components: { PostItem },
   data() {
     return {
+
       posts: []
     };
   },
@@ -62,10 +68,12 @@ export default {
   mounted() {
     this.fetchPosts();
   }
+
 };
 </script>
 
 <style scoped>
+
 .home-container {
   max-width: 700px;
   margin: 0 auto;
