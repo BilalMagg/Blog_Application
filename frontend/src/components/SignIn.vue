@@ -72,8 +72,8 @@
         left: -100%;
         height: 100%;
         width: 200%;
-        background: linear-gradient(to bottom right, #7FD625, #009345);
-        color: #fff;
+        background: linear-gradient(to bottom right, #7FD625, #118B50);
+        color: #151313;
         transform: translateX(0);
         transition: transform .5s ease-in-out;
       }
@@ -156,7 +156,7 @@
       width: calc(50% - 120px);
       height: calc(100% - 180px);
       text-align: center;
-      background: linear-gradient(to bottom, #efefef, #ccc);
+      background: linear-gradient(to bottom, #FBF6E9, #FBF6E9);
       transition: all .5s ease-in-out;
   
       div {
@@ -186,6 +186,7 @@
     .sign-in {
       left: 0;
       z-index: 2;
+      color:#151313
     }
   
     .sign-up {
@@ -197,6 +198,7 @@
     .sign-up-active {
       .sign-in {
         transform: translateX(100%);
+        color:#151313
       }
   
       .sign-up {
@@ -204,6 +206,7 @@
         opacity: 1;
         z-index: 5;
         animation: show .5s;
+        color : black
       }
   
       .overlay-container {

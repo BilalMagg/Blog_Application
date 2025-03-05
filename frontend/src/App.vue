@@ -25,7 +25,7 @@
       font-family: Tahoma;
       font-size: 1.6rem;
       color: #ffffff;
-      background-color: #EAEAEA;
+      background-color: #E3F0AF;
       height: 100vh;
       display: flex;
       justify-content: center;
