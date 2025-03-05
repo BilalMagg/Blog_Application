@@ -4,7 +4,7 @@
   <div>
     <!-- Navigation Bar (Includes Create Post Button) -->
     <NavBar />
-
+    
     <!-- Dynamic View -->
     <router-view />
   </div>
