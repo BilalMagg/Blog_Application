@@ -15,7 +15,7 @@ describe('NavBar.vue', () => {
     });
   });
 
-  it('affiche le logo et le texte Blog', () => {
+  it('affiche le texte Blog', () => {
     expect(wrapper.find('.logo-text').text()).toBe('Blog');
   });
 

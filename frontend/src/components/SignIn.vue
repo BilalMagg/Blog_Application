@@ -21,7 +21,7 @@
           <input type="text" placeholder="Name" />
           <input type="email" placeholder="Email" />
           <input type="password" placeholder="Password" />
-          <button>Sign Up</button>
+          <router-link to="/"><button>Sign Up</button></router-link>
         </form>
         <form class="sign-in" action="#">
           <h2>Sign In</h2>
@@ -29,7 +29,7 @@
           <input type="email" placeholder="Email" />
           <input type="password" placeholder="Password" />
           <a href="#">Forgot your password?</a>
-          <button>Sign Up</button>
+          <router-link to="/"><button>Sign In</button></router-link>
         </form>
       </div>
     </article>
@@ -55,6 +55,7 @@
       box-shadow: 0 15px 30px rgba(0, 0, 0, .2),
                   0 10px 10px rgba(0, 0, 0, .2);
       background: linear-gradient(to bottom, #FBF6E9);
+      margin: 50px auto;
   
       .overlay-container {
         position: absolute;
@@ -72,7 +73,7 @@
         left: -100%;
         height: 100%;
         width: 200%;
-        background: linear-gradient(to bottom right, #7FD625, #009345);
+        background:  #118B50;
         color: #fff;
         transform: translateX(0);
         transition: transform .5s ease-in-out;
@@ -156,7 +157,7 @@
       width: calc(50% - 120px);
       height: calc(100% - 180px);
       text-align: center;
-      background: linear-gradient(to bottom, #efefef, #ccc);
+      background: #E3F0AF;
       transition: all .5s ease-in-out;
   
       div {

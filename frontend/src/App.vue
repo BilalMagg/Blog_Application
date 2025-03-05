@@ -1,34 +1,26 @@
 <template>
-    <div id="app">
-      <SignIn />
-    </div>
-  </template>
-  
-  <script>
-  import SignIn from './components/SignIn.vue';
-  
-  export default {
-    name: 'app',
-    components: {
-      SignIn,
-    }
-  }
-  </script>
-  
-  <style lang="scss">
-    body {
-      margin: 0;
-      padding: 0;
-    }
-  
-    #app {
-      font-family: Tahoma;
-      font-size: 1.6rem;
-      color: #ffffff;
-      background-color: #EAEAEA;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  </style>
+  <div>
+    <!-- Navigation Bar (Includes Create Post Button) -->
+    <NavBar />
+
+    <!-- Dynamic View -->
+    <router-view />
+  </div>
+</template>
+
+<script>
+import NavBar from "@/components/NavBar.vue";
+
+export default {
+  name: "App",
+  components: { NavBar },
+};
+</script>
+
+<style>
+body {
+  background-color: #FBF6E9;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+</style>

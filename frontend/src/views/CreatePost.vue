@@ -19,23 +19,44 @@ export default {
     };
   },
   methods: {
-    uploadPost() {
+    async uploadPost() {
       if (!this.newPost.title || !this.newPost.content) return;
 
       let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
       if (this.isEditing) {
-        // ✅ Update existing post
-        posts = posts.map(post =>
-          post.id === this.newPost.id ? this.newPost : post
-        );
+        try {
+          const response = await fetch(`http://localhost:3000/posts/${this.newPost.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(this.newPost)
+          });
+
+          if (!response.ok) throw new Error("Backend update failed");
+
+        } catch (error) {
+          console.error("Backend unavailable, updating in localStorage");
+          posts = posts.map(post => (post.id === this.newPost.id ? this.newPost : post));
+          localStorage.setItem("posts", JSON.stringify(posts));
+        }
       } else {
-        // ✅ Create new post
-        this.newPost.id = Date.now();
-        posts.unshift(this.newPost);
+        this.newPost.id = Date.now(); // Generate unique ID for localStorage
+        try {
+          const response = await fetch("http://localhost:3000/posts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(this.newPost)
+          });
+
+          if (!response.ok) throw new Error("Backend create failed");
+
+        } catch (error) {
+          console.error("Backend unavailable, saving to localStorage");
+          posts.unshift(this.newPost);
+          localStorage.setItem("posts", JSON.stringify(posts));
+        }
       }
 
-      localStorage.setItem("posts", JSON.stringify(posts));
       this.$router.push("/");
     },
 
@@ -50,65 +71,11 @@ export default {
         }
       }
     }
-    /*
-async uploadPost() {
-  if (!this.newPost.title || !this.newPost.content) return;
-
-  try {
-    const response = await fetch("https://your-api.com/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(this.newPost)
-    });
-
-    if (!response.ok) throw new Error("Failed to upload post");
-
-    const newPost = await response.json();
-    console.log("Post uploaded:", newPost);
-
-    this.$router.push("/"); // ✅ Redirect to homepage after posting
-  } catch (error) {
-    console.error("Error uploading post:", error);
-  }
-}
-*/
-
-/*
-async uploadPost() {
-  if (!this.newPost.title || !this.newPost.content) return;
-
-  let apiUrl = "https://your-api.com/posts";
-  let method = "POST"; // Default to creating a new post
-
-  if (this.isEditing) {
-    apiUrl = `https://your-api.com/posts/${this.newPost.id}`;
-    method = "PUT"; // Change to updating a post
-  }
-
-  try {
-    const response = await fetch(apiUrl, {
-      method: method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(this.newPost)
-    });
-
-    if (!response.ok) throw new Error("Failed to save post");
-
-    const savedPost = await response.json();
-    console.log("Post saved:", savedPost);
-
-    this.$router.push("/"); 
-  } catch (error) {
-    console.error("Error saving post:", error);
-  }
-}
-*/
-
-
   },
 
   mounted() {
-    this.loadPostToEdit(); }
+    this.loadPostToEdit();
+  }
 };
 </script>
 
@@ -119,13 +86,15 @@ async uploadPost() {
   padding: 20px;
   text-align: center;
 }
+
 input, textarea {
   width: 100%;
   margin-bottom: 10px;
   padding: 10px;
 }
+
 button {
-  background: #42b983;
+  background: green;
   color: white;
   padding: 10px 15px;
   border: none;

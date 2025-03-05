@@ -2,29 +2,24 @@
   <nav class="navbar">
     <!-- Logo et nom -->
     <div class="logo-container">
-    <!-- <img src="@/assets/logo.png" alt="Logo" class="logo" /> -->  
-      <span class="logo-text">Blog</span>
+      <router-link to="/" ><i class="fa-solid fa-house"  ></i></router-link>
     </div>
-
-    <!-- Liens de navigation -->
-    <ul class="nav-links">
-      <li>
-        <a href="#" class="nav-item">Questions</a>
-      </li>
-    </ul>
+  
 
     <!-- Actions utilisateur -->
     <div class="actions">
       <template v-if="isAuthenticated">
       <!-- Bouton "Ask a question" -->
+      <router-link to="/create">
       <button class="ask-button">
-        ✚ Ask a question
+        ✚ Create post
       </button>
-
+      </router-link>
       <!-- Icône de notification -->
       <button class="notification-button">
         <!--<BellIcon class="notification-icon" />-->
         <!-- Badge de notification -->
+        <i class="fa-solid fa-bell"></i>
         <span class="notification-badge">0</span>
       </button>
       
@@ -39,16 +34,20 @@
         <!-- Menu déroulant -->
         <div v-if="dropdownOpen" class="dropdown-menu" data-testid="dropdown-menu">
           <a href="#" class="dropdown-item">Profile</a>
-          <a href="#" class="dropdown-item">Settings</a>
-          <a href="#" class="dropdown-item logout">Logout</a>
+
+          <!-- 
+          <a href="#" class="dropdown-item">Settings</a> 
+          -->
+
+          <router-link to="/SignIn" class="logout">Logout</router-link>
         </div>
       </div>
     </template>
     
     <template v-else>
       <!-- Boutons Register et Login -->
-      <a href="SignIn.vue"><button class="register-button">➜ Register</button></a>
-      <a href="SignIn.vue"><button class="login-button">Login</button></a>
+      <router-link to="/SignIn"><button class="register-button">➜ Register</button></router-link>
+      <router-link to="/SignIn"><button class="login-button">Login</button></router-link>
     </template>
     </div>
   </nav>
@@ -56,6 +55,7 @@
 </template>
 
 <script>
+
 import { ref, onMounted, onUnmounted } from "vue";
 //import { BellIcon } from "@heroicons/vue/outline";
 
@@ -88,13 +88,15 @@ export default {
       document.removeEventListener("click", closeDropdown);
     });
 
-    return { dropdownOpen, toggleDropdown, toggleDropdown };
+    return { dropdownOpen, toggleDropdown, isAuthenticated };
   },
 };
 </script>
 
 
 <style scoped>
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css");
+
 /* Styles généraux de la navbar */
 .navbar {
   display: flex;
@@ -196,11 +198,17 @@ export default {
   height: 24px;
   color: #4A5568;
 }
+
+i{
+  font-size: 25px;
+  color: black;
+}
 .notification-badge {
   position: absolute;
   top: 0;
   right: 0;
   background: red;
+  opacity: 0.8;
   color: white;
   font-size: 12px;
   width: 16px;
@@ -246,5 +254,8 @@ export default {
 }
 .logout {
   color: red;
+  text-decoration: none;
+  display: block;
+  padding: 8px 16px;
 }
 </style>
