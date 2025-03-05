@@ -68,5 +68,27 @@ const deletePost = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+//affciher les posts en ordre decroissant
+const getAllPostsOrder = async (req, res) => {
+  try {
+    const posts = await Posts.findAll({
+      attributes: {
+        include: [
+          [Sequelize.fn('COALESCE', Sequelize.fn('SUM', Sequelize.col('Votes.vote')), 0), 'totalVotes']
+        ]
+      },
+      include: [{
+        model: require('../models').Vote,
+        attributes: [] // Pas besoin d'attributs individuels, juste pour l'agrégation
+      }],
+      group: ['Posts.id', 'User.id'], // Groupement requis pour l'agrégation
+      order: [[Sequelize.literal('totalVotes'), 'DESC']], // Tri décroissant par totalVotes
+      include: [{ model: require('../models').User, attributes: ['id', 'username'] }] // Inclut l'utilisateur
+    });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur serveur : impossible de récupérer les posts par votes', details: error.message });
+  }
+};
 
-module.exports = { createPost, getAllPosts, getPostById, updatePost, deletePost };
+module.exports = { createPost, getAllPosts, getPostById, updatePost, deletePost ,getAllPostsOrder };
