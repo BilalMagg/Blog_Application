@@ -29,7 +29,7 @@
         <input type="email" placeholder="Email" />
         <input type="password" placeholder="Password" />
         <a href="#">Forgot your password?</a>
-        <router-link to="/"><button>Sign In</button></router-link>
+        <router-link to="/User"><button>Sign In</button></router-link>
       </form>
     </div>
   </article>
