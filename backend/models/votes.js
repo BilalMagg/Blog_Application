@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     vote: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Votes',
+    modelName: 'Vote',
   });
   return Votes;
 };
