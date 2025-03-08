@@ -2,23 +2,13 @@
 
   <div class="home-container">
     <h1 class="home-title">📖 Blog Posts</h1>
-<<<<<<< HEAD
-
-=======
->>>>>>> fbdbc97 (added comments and votes to each post still no database integration)
     <PostItem 
       v-for="post in posts" 
       :key="post.id" 
       :post="post" 
       @edit="handleEdit" 
       @delete="handleDelete"
-<<<<<<< HEAD
-
       @update="updatePost"
-
-=======
-      @update="updatePost"
->>>>>>> fbdbc97 (added comments and votes to each post still no database integration)
     />
   </div>
 </template>
@@ -30,7 +20,6 @@ export default {
   components: { PostItem },
   data() {
     return {
-<<<<<<< HEAD
 
       posts: []
     };
@@ -66,32 +55,16 @@ export default {
       }
     },
 
-=======
-      posts: JSON.parse(localStorage.getItem("posts")) || []
-    };
-  },
-  methods: {
-    handleEdit(post) {
-      this.$router.push(`/edit/${post.id}`);
-    },
-    handleDelete(postId) {
-      this.posts = this.posts.filter(post => post.id !== postId);
-      localStorage.setItem("posts", JSON.stringify(this.posts));
-    },
->>>>>>> fbdbc97 (added comments and votes to each post still no database integration)
     updatePost(updatedPost) {
       this.posts = this.posts.map(post => (post.id === updatedPost.id ? updatedPost : post));
       localStorage.setItem("posts", JSON.stringify(this.posts));
     }
   },
-<<<<<<< HEAD
 
   mounted() {
     this.fetchPosts();
   }
 
-=======
->>>>>>> fbdbc97 (added comments and votes to each post still no database integration)
 };
 </script>
 <style scoped>
@@ -103,10 +76,7 @@ export default {
   text-align: center;
 }
 
-<<<<<<< HEAD
-=======
 /* Header (Blog Posts) */
->>>>>>> fbdbc97 (added comments and votes to each post still no database integration)
 .home-title {
   font-size: 32px;
   font-weight: bold;
