@@ -1,49 +1,139 @@
 <template>
   <article>
-    <div class="container" :class="{'sign-up-active' : signUp}">
+    <div class="container" :class="{'sign-up-active': signUp}">
       <div class="overlay-container">
         <div class="overlay">
           <div class="overlay-left">
             <h2>Welcome Back to your blog!</h2>
             <p>Please login with your personal information and start sharing blogs with us</p>
-            <button class="invert" id="signIn" @click="signUp = !signUp">Sign In</button>
+            <button class="invert" id="signIn" @click="toggleSignUp">Sign In</button>
           </div>
           <div class="overlay-right">
             <h2>Hello, Friend!</h2>
             <p>Please enter your personal details</p>
-            <button class="invert" id="signUp" @click="signUp = !signUp">Sign Up</button>
+            <button class="invert" id="signUp" @click="toggleSignUp">Sign Up</button>
           </div>
         </div>
       </div>
-      <form class="sign-up" action="#">
+
+      <!-- Sign Up Form -->
+      <form class="sign-up" v-if="signUp" @submit.prevent="register">
         <h2>Create login</h2>
         <div>Use your email for registration</div>
-        <input type="text" placeholder="Name" />
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Password" />
-        <router-link to="/"><button>Sign Up</button></router-link>
+        <input type="text" placeholder="Username" v-model="username" required />
+        <input type="email" placeholder="Email" v-model="email" required />
+        <input type="password" placeholder="Password" v-model="password" required />
+
+        <!-- Success Message -->
+        <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
+
+        <!-- Error Message -->
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+        <button type="submit">Sign Up</button>
       </form>
-      <form class="sign-in" action="#">
+
+      <!-- Sign In Form -->
+      <form class="sign-in" v-if="!signUp" @submit.prevent="login">
         <h2>Sign In</h2>
         <div>Use your account</div>
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Password" />
+        <input type="text" placeholder="Email or Username" v-model="loginEmail" required />
+        <input type="password" placeholder="Password" v-model="loginPassword" required />
         <a href="#">Forgot your password?</a>
-        <router-link to="/User"><button>Sign In</button></router-link>
+
+        <!-- Error Message for Login -->
+        <p v-if="loginErrorMessage" class="error-message">{{ loginErrorMessage }}</p>  
+
+        <button type="submit">Sign In</button>
       </form>
     </div>
   </article>
 </template>
 
 <script>
-  export default {
-    data: () => {
-      return {
-        signUp: false
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      // Registration Form Data
+      username: '',
+      email: '',
+      password: '',
+      successMessage: '', // Success message for registration
+      errorMessage: '', // Error message for registration
+
+      // Login Form Data
+      loginEmail: '',
+      loginPassword: '',
+      loginErrorMessage: '', // Error message for login
+
+      // To toggle between Sign Up and Sign In forms
+      signUp: false
+    };
+  },
+  methods: {
+    // Toggle between Sign Up and Sign In forms
+    toggleSignUp() {
+      this.signUp = !this.signUp;
+    },
+
+    // Registration Method
+    async register() {
+      try {
+        /*const response = await axios.post('http://localhost:3000/register', {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+          role: 'user' // Default role
+        });*/
+        const response = { data: { success: true } };
+
+        if (response.data.success) {
+          this.successMessage = '🎉 Congratulations! Your account has been created. Now you can login to Your account';
+          this.errorMessage = '';
+          setTimeout(() => {
+            window.location.reload(); // Reload the page
+          }, 3000);
+        } else {
+          this.errorMessage = '❌ Registration failed. Please try again.';
+        }
+      } catch (error) {
+        if (error.response && !error.response.data.success) {
+          this.errorMessage = '❌ User already exists.';
+        } else {
+          this.errorMessage = '❌ Error: Unable to create your account. Please try again.';
+        }
+      }
+    },
+
+    // Login Method
+    async login() {
+      try {
+        /*const response = await axios.post('http://localhost:3000/login', {
+          email: this.loginEmail,
+          password: this.loginPassword
+        });*/
+        const response = { data: { success: true, token: 'token'}};
+
+        if (response.data.success) {
+          localStorage.setItem('token', response.data.token); // Store the token
+          this.$router.push('/user'); // Redirect to User page if login is successful
+        } else {
+          this.loginErrorMessage = '❌ Incorrect email or password. Please try again.';
+        }
+      } catch (error) {
+        if (error.response && !error.response.data.success) {
+          this.loginErrorMessage = '❌ User not found or incorrect password.';
+        } else {
+          this.loginErrorMessage = '❌ Login failed. Please check your credentials.';
+        }
       }
     }
   }
+};
 </script>
+
 
 <style lang="scss" scoped>
   .container {
@@ -245,4 +335,20 @@
       z-index: 10;
     }
   }
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.success-message {
+  color: green;
+  font-size: 14px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
 </style>
