@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const  jwt=require('jsonwebtoken');
 const User=require('../models/user');
 const { Sequelize, Op } = require('sequelize');
+const cookieParser = require('cookie-parser');
 
 //fonction pour enregistrer un utilisateur
 const registerUser=async (req,res)=>{
@@ -22,7 +23,7 @@ const registerUser=async (req,res)=>{
  });
  return res.status(201).json({message: "User created successfully",user: newuser});
 }catch(err){
-  return res.status(500).json({message: "server error"});
+  return res.status(500).json({message: "server error",details:err.message});
 }
 }
 //fonction pour connexion
@@ -43,7 +44,8 @@ const loginUser=async (req,res)=>{
   // Générer un token JWT
   const token = jwt.sign({id: user.id ,email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-  res.json({ message: "Login successful", token });
+  res.json({ message: "Login successful" });
+  res.cookie('jwt', token, { httpOnly: true, secure: true, sameSite: 'None' });
   }catch(err){
     return res.status(500).json({message: "server error",err});
   }
