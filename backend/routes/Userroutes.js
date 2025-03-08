@@ -2,7 +2,7 @@ const express=require('express');
 const router=express.Router();
 const authmiddleware=require('../middleware/userauthmiddleware');
 
-const {registerUser, loginUser, getUserProfile, getallUserProfile}=require('../controllers/usercontroller');
+const {registerUser, loginUser, getUserProfile, getallUserProfile}=require('../controller/Usercontroller');
  //route d'inscription
 router.post('/register',registerUser);
  //route de connexion
