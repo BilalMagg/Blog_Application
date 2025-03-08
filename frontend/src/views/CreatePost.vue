@@ -22,59 +22,19 @@ export default {
     async uploadPost() {
       if (!this.newPost.title || !this.newPost.content) return;
 
-      let posts = JSON.parse(localStorage.getItem("posts")) || [];
+      try {
+        await fetch("http://localhost:3000/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(this.newPost)
+        });
 
-      if (this.isEditing) {
-        try {
-          const response = await fetch(`http://localhost:3000/posts/${this.newPost.id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(this.newPost)
-          });
-
-          if (!response.ok) throw new Error("Backend update failed");
-
-        } catch (error) {
-          console.error("Backend unavailable, updating in localStorage");
-          posts = posts.map(post => (post.id === this.newPost.id ? this.newPost : post));
-          localStorage.setItem("posts", JSON.stringify(posts));
-        }
-      } else {
-        this.newPost.id = Date.now(); // Generate unique ID for localStorage
-        try {
-          const response = await fetch("http://localhost:3000/posts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(this.newPost)
-          });
-
-          if (!response.ok) throw new Error("Backend create failed");
-
-        } catch (error) {
-          console.error("Backend unavailable, saving to localStorage");
-          posts.unshift(this.newPost);
-          localStorage.setItem("posts", JSON.stringify(posts));
-        }
+      } catch (error) {
+        console.error("Backend unavailable, saving to localStorage");
       }
 
       this.$router.push("/");
-    },
-
-    loadPostToEdit() {
-      const postId = this.$route.params.id;
-      if (postId) {
-        let posts = JSON.parse(localStorage.getItem("posts")) || [];
-        const existingPost = posts.find(post => post.id == postId);
-        if (existingPost) {
-          this.newPost = { ...existingPost };
-          this.isEditing = true;
-        }
-      }
     }
-  },
-
-  mounted() {
-    this.loadPostToEdit();
   }
 };
 </script>

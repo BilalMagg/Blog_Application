@@ -1,5 +1,4 @@
 <template>
-
   <div class="home-container">
     <h1 class="home-title">📖 Blog Posts</h1>
     <PostItem 

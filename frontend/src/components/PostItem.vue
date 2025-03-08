@@ -39,10 +39,10 @@ export default {
     return {
       showComments: false,
       newComment: "",
-      comments: JSON.parse(localStorage.getItem(`comments-${this.post.id}`)) || [],
-      likes: JSON.parse(localStorage.getItem(`likes-${this.post.id}`)) || 0,
-      dislikes: JSON.parse(localStorage.getItem(`dislikes-${this.post.id}`)) || 0,
-      userVote: JSON.parse(localStorage.getItem(`vote-${this.post.id}`)) || 0
+      comments: [],
+      likes: this.post.likes || 0,
+      dislikes: this.post.dislikes || 0,
+      userVote: 0
     };
   },
   methods: {
@@ -52,8 +52,6 @@ export default {
 
     async addComment() {
       if (!this.newComment.trim()) return;
-      this.comments.push(this.newComment);
-      localStorage.setItem(`comments-${this.post.id}`, JSON.stringify(this.comments));
 
       try {
         await fetch(`http://localhost:3000/posts/${this.post.id}/comments`, {
@@ -61,8 +59,10 @@ export default {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ content: this.newComment })
         });
+
+        this.comments.push(this.newComment);
       } catch (error) {
-        console.error("Backend unavailable, comment saved in localStorage");
+        console.error("Backend unavailable, comment not saved");
       }
 
       this.newComment = "";
@@ -80,10 +80,6 @@ export default {
         value === 1 ? this.likes++ : this.dislikes++;
       }
 
-      localStorage.setItem(`vote-${this.post.id}`, JSON.stringify(this.userVote));
-      localStorage.setItem(`likes-${this.post.id}`, JSON.stringify(this.likes));
-      localStorage.setItem(`dislikes-${this.post.id}`, JSON.stringify(this.dislikes));
-
       try {
         await fetch(`http://localhost:3000/posts/${this.post.id}/vote`, {
           method: "POST",
@@ -91,7 +87,7 @@ export default {
           body: JSON.stringify({ vote: this.userVote })
         });
       } catch (error) {
-        console.error("Backend unavailable, vote saved in localStorage");
+        console.error("Backend unavailable, vote not saved");
       }
     }
   }
