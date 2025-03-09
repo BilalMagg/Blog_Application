@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const  jwt=require('jsonwebtoken');
-const User=require('../models/user');
+const {User}=require('../models');
 const { Sequelize, Op } = require('sequelize');
 
 //fonction pour enregistrer un utilisateur
@@ -45,7 +45,7 @@ const loginUser=async (req,res)=>{
 
   res.json({ message: "Login successful", token });
   }catch(err){
-    return res.status(500).json({message: "server error",err});
+    return res.status(500).json({message: "server error",details:err.message});
   }
 }
 // fonction pour avoir profile d'un seul utilisateur
@@ -74,3 +74,5 @@ const getallUserProfile=async (req,res)=>{
   res.status(500).json({ message: "server error"});
  }
 }
+
+module.exports = { registerUser, loginUser, getUserProfile, getallUserProfile};
