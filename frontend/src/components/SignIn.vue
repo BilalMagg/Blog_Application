@@ -39,7 +39,8 @@
         <div>Use your account</div>
         <input type="text" placeholder="Email or Username" v-model="loginEmail" required />
         <input type="password" placeholder="Password" v-model="loginPassword" required />
-        <a href="#">Forgot your password?</a>
+        <a href="/ForgotPassword">Forgot your password?</a>
+        
 
         <!-- Error Message for Login -->
         <p v-if="loginErrorMessage" class="error-message">{{ loginErrorMessage }}</p>  
@@ -72,6 +73,15 @@ export default {
       signUp: false
     };
   },
+  created() {
+    // Check if there's a query parameter to determine which form to show
+    const mode = this.$route.query.mode;
+    if (mode === 'register') {
+      this.signUp = true;
+    } else {
+      this.signUp = false;
+    }
+  },
   methods: {
     // Toggle between Sign Up and Sign In forms
     toggleSignUp() {
@@ -93,8 +103,9 @@ export default {
           this.successMessage = '🎉 Congratulations! Your account has been created. Now you can login to Your account';
           this.errorMessage = '';
           setTimeout(() => {
-            window.location.reload(); // Reload the page
-          }, 3000);
+            this.$router.push('/SignIn'); 
+          }, 2000); 
+          window.location.reload(); // Reload the page
         } else {
           this.errorMessage = '❌ Registration failed. Please try again.';
         }
@@ -225,13 +236,16 @@ export default {
     cursor: pointer;
     transition: transform .1s ease-in;
 
-    &:active {
-      transform: scale(.9);
-    }
+    &:hover {
+    background-color: #007a3a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  }
 
-    &:focus {
-      outline: none;
-    }
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
   }
 
   button.invert {
@@ -271,11 +285,11 @@ export default {
       overflow: hidden;
 
       &:focus {
-        outline: none;
-        background-color: #FBF6E9;
-
-      }
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 147, 69, 0.5);
+    background-color: #fff;
     }
+  }
   }
 
   .sign-in {
