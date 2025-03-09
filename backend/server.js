@@ -1,14 +1,12 @@
-
 const { sequelize } = require('./models');
 require('dotenv').config();
-
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const postRoutes = require('./routes/posts');
 const userRoutes = require('./routes/users');
 const commentRoutes = require('./routes/comments');
-// const voteRoutes = require('./routes/votes');
+const voteRoutes = require('./routes/votes');
 
 app.use(express.json());
 app.use(cors());
@@ -20,7 +18,7 @@ app.get('/', (req, res) => {
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
 app.use('/comments', commentRoutes);
-// app.use('/votes',voteRoutes);
+app.use('/votes',voteRoutes);
 
 sequelize.authenticate()
   .then(() => {

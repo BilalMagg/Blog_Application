@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const voteController = require('../controllers/voteController');
-const authMiddleware = require("../middlewares/authMiddleware");
+const authMiddleware = require("../middleware/authMiddleware");
 
-router.post("/", authMiddleware, voteController.votePost);
+router.post("/", authMiddleware,voteController.votePost);
 // Ajouter un vote
-router.post('/votes', voteController.addVote);
+// router.post('/votes', voteController.addVote);
 
 // Récupérer tous les votes d'un post spécifique
-router.get('/posts/:post_id/votes', voteController.getVotesByPost);
+router.get('/posts/:post_id',authMiddleware, voteController.getVotesByPost);
 
 // Récupérer tous les votes d'un utilisateur spécifique
-router.get("/users/:user_id/votes", authMiddleware, voteController.getVotesByUser);
+router.get("/users/:user_id",authMiddleware, voteController.getVotesByUser);
 
 // Mettre à jour un vote existant
 router.put("/:vote_id", authMiddleware, voteController.updateVote);
