@@ -1,28 +1,29 @@
 const { sequelize } = require('./models');
 require('dotenv').config();
-
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const postRoutes = require('./routes/posts');
+const userRoutes = require('./routes/users');
+const commentRoutes = require('./routes/comments');
+const voteRoutes = require('./routes/votes');
 
-// Set up express middlewares
 app.use(express.json());
 app.use(cors());
 
-// Test root route
 app.get('/', (req, res) => {
   res.send('Server is running');
 });
 
-// Use post routes
 app.use('/posts', postRoutes);
+app.use('/users', userRoutes);
+app.use('/comments', commentRoutes);
+app.use('/votes',voteRoutes);
 
-// Sync Sequelize models
 sequelize.authenticate()
   .then(() => {
     console.log('Connection to the database has been established successfully.');
-    return sequelize.sync({ force: false }); // Change to true if you want to recreate tables on each restart
+    return sequelize.sync({ force: false }); 
   })
   .then(() => {
     console.log('The tables have been successfully created.');
@@ -33,10 +34,9 @@ sequelize.authenticate()
   })
   .catch(err => {
     console.error('Error during database synchronization:', err);
-    process.exit(1); // Exit if database sync fails
+    process.exit(1); 
   });
 
-// Graceful shutdown
 process.on('SIGINT', () => {
   console.log('Gracefully shutting down...');
   sequelize.close().then(() => {

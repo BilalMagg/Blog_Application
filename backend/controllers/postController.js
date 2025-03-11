@@ -69,7 +69,7 @@ const deletePost = async (req, res) => {
         if (!post) return res.status(404).json({ message: 'Article non trouvé' });
 
         // Check if the user owns the post
-        if (post.user_id !== req.user?.id) return res.status(403).json({ message: 'Non autorisé' });
+        // if (post.user_id !== req.user?.id) return res.status(403).json({ message: 'Non autorisé' });
 
         await post.destroy(); // Delete the post
 
