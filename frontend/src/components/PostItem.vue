@@ -20,8 +20,8 @@
 
     <!-- Comments Section -->
     <div v-if="showComments" class="comments-section">
-      <div v-for="(comment, index) in comments" :key="index" class="comment">
-        <p>{{ comment }}</p>
+      <div v-for="comment in comments" :key="comment.id" class="comment">
+        <p><strong>{{ comment.username || "Anonymous" }}:</strong> {{ comment.content }}</p>
       </div>
       <input v-model="newComment" type="text" placeholder="Write a comment..." @keyup.enter="addComment" />
       <button @click="addComment">Add Comment</button>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import PostMenu from "./PostMenu.vue";
 
 export default {
@@ -48,46 +49,56 @@ export default {
   methods: {
     toggleComments() {
       this.showComments = !this.showComments;
+      if (this.showComments) this.fetchComments();
+    },
+
+    async fetchComments() {
+      try {
+        const response = await axios.get(`http://localhost:3000/post/${this.post.id}`);
+        this.comments = response.data;
+      } catch (error) {
+        console.error("Failed to load comments:", error);
+      }
     },
 
     async addComment() {
       if (!this.newComment.trim()) return;
 
+      const user_id = localStorage.getItem("user_id") || "temp-user-123"; // Temporary user
       try {
-        await fetch(`http://localhost:3000/posts/${this.post.id}/comments`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: this.newComment })
+        await axios.post(`http://localhost:3000/post/${this.post.id}/user/${user_id}`, {
+          content: this.newComment
         });
-
-        this.comments.push(this.newComment);
+        this.comments.push({ content: this.newComment, username: "Anonymous" });
+        this.newComment = "";
       } catch (error) {
-        console.error("Backend unavailable, comment not saved");
+        console.error("Failed to save comment:", error);
       }
-
-      this.newComment = "";
     },
 
     async vote(value) {
-      if (this.userVote === value) {
-        this.userVote = 0;
-        value === 1 ? this.likes-- : this.dislikes--;
-      } else {
-        if (this.userVote !== 0) {
-          this.userVote === 1 ? this.likes-- : this.dislikes--;
-        }
-        this.userVote = value;
-        value === 1 ? this.likes++ : this.dislikes++;
-      }
+      const user_id = localStorage.getItem("user_id") || "temp-user-123";
 
       try {
-        await fetch(`http://localhost:3000/posts/${this.post.id}/vote`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ vote: this.userVote })
+        await axios.post("http://localhost:3000/votes", {
+          user_id,
+          post_id: this.post.id,
+          vote: value
         });
+
+        // Update UI
+        if (this.userVote === value) {
+          this.userVote = 0;
+          value === 1 ? this.likes-- : this.dislikes--;
+        } else {
+          if (this.userVote !== 0) {
+            this.userVote === 1 ? this.likes-- : this.dislikes--;
+          }
+          this.userVote = value;
+          value === 1 ? this.likes++ : this.dislikes++;
+        }
       } catch (error) {
-        console.error("Backend unavailable, vote not saved");
+        console.error("Failed to save vote:", error);
       }
     }
   }

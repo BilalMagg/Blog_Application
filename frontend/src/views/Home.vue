@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import PostItem from "../components/PostItem.vue";
 
 export default {
@@ -25,9 +26,8 @@ export default {
   methods: {
     async fetchPosts() {
       try {
-        const response = await fetch("http://localhost:3000/posts");
-        if (!response.ok) throw new Error("Failed to fetch from backend");
-        this.posts = await response.json();
+        const response = await axios.get("http://localhost:3000/posts");
+        this.posts = response.data;
       } catch (error) {
         console.error("Backend unavailable, using localStorage");
         this.posts = JSON.parse(localStorage.getItem("posts")) || [];
@@ -40,22 +40,15 @@ export default {
 
     async handleDelete(postId) {
       try {
-        const response = await fetch(`http://localhost:3000/posts/${postId}`, {
-          method: "DELETE"
-        });
-
-        if (!response.ok) throw new Error("Failed to delete post");
+        await axios.delete(`http://localhost:3000/posts/${postId}`);
         this.posts = this.posts.filter(post => post.id !== postId);
       } catch (error) {
-        console.error("Backend unavailable, deleting from localStorage");
-        this.posts = this.posts.filter(post => post.id !== postId);
-        localStorage.setItem("posts", JSON.stringify(this.posts));
+        console.error("Failed to delete post:", error);
       }
     },
 
     updatePost(updatedPost) {
       this.posts = this.posts.map(post => (post.id === updatedPost.id ? updatedPost : post));
-      localStorage.setItem("posts", JSON.stringify(this.posts));
     }
   },
 

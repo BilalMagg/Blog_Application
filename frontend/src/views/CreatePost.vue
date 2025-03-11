@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "CreatePost",
   data() {
@@ -23,18 +25,33 @@ export default {
       if (!this.newPost.title || !this.newPost.content) return;
 
       try {
-        await fetch("http://localhost:3000/posts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(this.newPost)
-        });
-
+        if (this.isEditing) {
+          await axios.put(`http://localhost:3000/posts/${this.newPost.id}`, this.newPost);
+        } else {
+          await axios.post("http://localhost:3000/posts", this.newPost);
+        }
       } catch (error) {
-        console.error("Backend unavailable, saving to localStorage");
+        console.error("Failed to save post:", error);
       }
 
       this.$router.push("/");
+    },
+
+    loadPostToEdit() {
+      const postId = this.$route.params.id;
+      if (postId) {
+        axios.get(`http://localhost:3000/posts/${postId}`)
+          .then(response => {
+            this.newPost = response.data;
+            this.isEditing = true;
+          })
+          .catch(() => console.error("Failed to load post"));
+      }
     }
+  },
+
+  mounted() {
+    this.loadPostToEdit();
   }
 };
 </script>
