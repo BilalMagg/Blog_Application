@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/postController');
 //const authMiddleware = require('../middleware/auth'); // Middleware d’authentification (à supposer qu’il existe)
-
+const sanitizeContent = require('../middleware/sanitation');
 // Définition des routes CRUD pour les posts:
 // router.post('/', authMiddleware, postController.createPost);
 router.post('/',sanitizeContent, postController.createPost);

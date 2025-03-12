@@ -8,9 +8,6 @@ const userRoutes = require('./routes/users');
 const commentRoutes = require('./routes/comments');
 const voteRoutes = require('./routes/votes');
 
-const contentSanitizer = require('./middlewares/sanitation');
-const passwordValidator = require('./middlewares/verifyPWT');
-
 app.use(express.json());
 app.use(cors());
 
@@ -20,7 +17,7 @@ app.get('/', (req, res) => {
 
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
-app.use('/comments', commentRoutes);
+//app.use('/comments', commentRoutes);
 app.use('/votes',voteRoutes);
 
 sequelize.authenticate()
