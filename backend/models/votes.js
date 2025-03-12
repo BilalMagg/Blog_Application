@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.User, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+      this.belongsTo(models.Post, { foreignKey: 'post_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     }
   }
   Votes.init({
@@ -19,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     vote: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Votes',
+    modelName: 'Vote',
   });
   return Votes;
 };
