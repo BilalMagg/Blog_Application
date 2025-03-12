@@ -1,17 +1,16 @@
 <template>
     <div class="side-bar-container">
-
-        <li class="search-div" style="list-style-type: none;">
+      <li style="list-style-type: none;">
         <i class="fa-solid fa-magnifying-glass"></i> Search
       </li>
-
-        <h3>MENU</h3>
-
-        <ul>
+  
+      <h3>MENU</h3>
+      <ul>
         <li><i class="fa-solid fa-bars"></i> Questions</li>
         <li><i class="fa-solid fa-tag"></i> Tags</li>
         <li><i class="fa-solid fa-medal"></i> Ranking</li>
       </ul>
+  
       <!-- Si l'utilisateur est connecté, afficher "Personal Navigator" -->
       <div v-if="isLoggedIn">
         <h3>PERSONAL NAVIGATOR</h3>
@@ -47,33 +46,18 @@
     list-style-type: none;
   }
   
-  .side-bar-container{
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-    height: 100vh;
-    align-items: flex-start;
+  .side-bar-container {
     font-family: Arial;
-    background-color: rgb(227, 240, 175);
-
-    
-  }
-  .search-div{
-    margin-left: 35px;
+    background-color: var(--BG-COLOR);
   }
   
   h3 {
-    font-family:Arial, Helvetica, sans-serif;
-    margin-left: 51px;
-    font-weight: 400;
     font-size: 14px;
-    margin-bottom: -4px;
+    margin-bottom: 10px;
     color: var(--HEADER-CLR);
   }
   
   li {
-    display: flex;
-    align-items: center;
     padding: 10px;
     font-size: 16px;
     gap: 10px;
@@ -84,7 +68,6 @@
   li i {
     width: 20px;
     text-align: center;
-    flex-shrink: 0;
   }
   
   li:hover,

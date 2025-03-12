@@ -1,16 +1,16 @@
-app.use(express.json());
-const Comment = require('./models/comment.js')
+const { Comment } = require('../models')
 
 exports.createComment = async (req, res) => {
     try {
-        const { user_id, post_id, content } = req.body;
-        const newComment = await Comment.Create({ user_id, post_id, content })
+        const { content } = req.body;
+        const { user_id, post_id } = req.params;
+        const newComment = await Comment.create({ user_id, post_id, content })
 
         await newComment.save();
         res.status(201).json({ message: "Commentaire est ajouté ", comment: newComment })
     }
     catch (error) {
-        res.status(500).json({ error: "erreur" });
+        res.status(500).json({ error: "erreur" ,details:error.message});
     }
 };
 
@@ -22,7 +22,7 @@ exports.getAllcomments = async (req, res) => {
         }
         res.status(200).json(comments);
     } catch (error) {
-        res.status(500).json({ error: "erreur" });
+        res.status(500).json({ error: "erreur" ,details:error.message ,Model: {Comments}});
     }
 };
 
@@ -36,7 +36,7 @@ exports.getAllcommentsbypost = async (req, res) => {
         }
         res.status(200).json(comments);
     } catch (error) {
-        res.status(500).json({ error: " erreur" });
+        res.status(500).json({ error: " erreur" ,details:error.message});
     }
 };
 
@@ -49,7 +49,7 @@ exports.getAllcommentsbyuser = async (req, res) => {
         }
         res.status(200).json(comments);
     } catch (error) {
-        res.status(500).json({ error: " erreur" });
+        res.status(500).json({ error: " erreur" ,details:error.message});
     }
 };
 
@@ -62,7 +62,7 @@ exports.getcommentbyPostandUser = async (req, res) => {
         }
         res.status(200).json(comments);
     } catch (error) {
-        res.status(500).json({ error: " erreur" });
+        res.status(500).json({ error: " erreur" ,details:error.message});
 
     }
 };
@@ -84,7 +84,7 @@ exports.deleteAllcomment = async (req, res) => {
         await Comment.destroy({});
         res.status(200).json({ message: "tous les commentaires sont suprimés" });
     } catch (error) {
-        res.status(500).json({ error: "erreur" });
+        res.status(500).json({ error: "erreur" ,details:error.message});
     }
 
 };
@@ -95,7 +95,7 @@ exports.deleteAllcommentsbypost = async (req, res) => {
         await Comment.destroy({ post_id });
         res.status(200).json({ message: "les commentaires de ce poste sont supprimés " });
     } catch (error) {
-        res.status(500).json({ error: "erreur" });
+        res.status(500).json({ error: "erreur" ,details:error.message});
 
     }
 };
@@ -106,7 +106,7 @@ exports.deletecommentbyuser = async (req, res) => {
         await Comment.delete({ user_id });
         res.status(200).json({ message: "les commentaires de ce utilisateur sont supprimés " });
     } catch (error) {
-        res.status(500).json({ error: "erreur" });
+        res.status(500).json({ error: "erreur" ,details:error.message});
 
     }
 
@@ -118,7 +118,7 @@ exports.deletecommentbypostuser = async (req, res) => {
         await Comment.delete({ user_id, post_id });
         res.status(200).json({ message: "les commentaires de ce post et de ce utilisateur sont supprimés " });
     } catch (error) {
-        res.status(500).json({ error: "erreur" });
+        res.status(500).json({ error: "erreur" ,details:error.message});
 
     }
 };
@@ -141,8 +141,7 @@ exports.updatecommentsbyUserandPost = async (req, res) => {
          await comment.update({content});
          res.status(200).json({message : "le message est modifié"});
     }catch(error){
-        res.status(500).json({error : "erreur "});
-
+        res.status(500).json({error : "erreur ", details : error.message});
     }
 }
 

@@ -50,8 +50,8 @@
     <template v-else>
       <!-- Boutons Register et Login -->
 
-      <router-link to="/SignIn"><button class="register-button">➜ Register</button></router-link>
-      <router-link to="/SignIn"><button class="login-button">Login</button></router-link>
+      <router-link to="/SignIn?mode=register"><button class="register-button">➜ Register</button></router-link>
+      <router-link to="/SignIn?mode=login"><button class="login-button">Login</button></router-link>
 
     </template>
     </div>

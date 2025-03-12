@@ -4,6 +4,7 @@ import CreatePost from "@/views/CreatePost.vue";
 
 import SignIn from "@/components/SignIn.vue";
 import UserPage from "@/views/UserPage.vue";
+import ForgotPassword from "@/components/ForgotPassword.vue";
 
 
 
@@ -14,6 +15,7 @@ const routes = [
   { path: "/edit/:id", component: CreatePost }, // ✅ Allows editing a post by ID
   {path: "/SignIn", component: SignIn},
   {path : "/User", component: UserPage}
+  ,{path : "/ForgotPassword", component: ForgotPassword}
 ];
 
 
