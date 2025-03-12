@@ -8,6 +8,17 @@ const userRoutes = require('./routes/users');
 const commentRoutes = require('./routes/comments');
 const voteRoutes = require('./routes/votes');
 
+const contentSanitizer = require('./middlewares/sanitation');
+const passwordValidator = require('./middlewares/verifyPWT');
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.post('/register', contentSanitizer, passwordValidator, (req, res) => {
+  res.status(200).json({ message: "Utilisateur enregistré avec succès !" });
+});
+app.listen(3000, () => {
+  console.log('Serveur démarré sur http://localhost:3000');
+});
+
 app.use(express.json());
 app.use(cors());
 

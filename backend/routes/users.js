@@ -9,7 +9,7 @@ router.post('/register',registerUser);
  //route de connexion
 router.post('/login',loginUser);
  //route de profile
- router.get('/profile',getUserProfile);
- router.get('/',getallUserProfile);
- 
+router.get('/profile',getUserProfile);
+router.get('/',getallUserProfile);
+
 module.exports=router;
