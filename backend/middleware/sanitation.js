@@ -1,9 +1,19 @@
-module.exports = (req, res, next) => {
-    const { title, content, username, password, email, comments } = req.body;
 
-    if (!title || !content || !username || !password || !email || !comments) {
-        return res.status(400).json({ message: "Tous les champs sont obligatoires !" });
-    }
+const sanitizeContent = (requiredFields = []) => {
+    return (req, res, next) => {
+        const errors = [];
+        requiredFields.forEach((field) => {
+            if (!req.body[field] || req.body[field].trim() === '') {
+                errors.push(`${field} is required.`);
+            }
+        });
 
-    next(); 
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
+        }
+
+        next();
+    };
 };
+
+module.exports = sanitizeContent;
