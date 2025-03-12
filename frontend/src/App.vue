@@ -1,21 +1,25 @@
 <template>
-
-
   <div>
-    <!-- Navigation Bar (Includes Create Post Button) -->
     <NavBar />
-    
-    <!-- Dynamic View -->
-    <router-view />
+  </div>
+
+  <div class="page">
+    <!-- Navigation Bar (Includes Create Post Button) -->
+    <SideBar />
+      <!-- Dynamic View -->
+    <router-view/>
   </div>
 </template>
 
 <script>
 import NavBar from "@/components/NavBar.vue";
+import SideBar from "./components/SideBar.vue";
 
 export default {
   name: "App",
-  components: { NavBar },
+  components: { NavBar,
+    SideBar
+   },
 };
 </script>
 
@@ -25,4 +29,10 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
 }
+
+.page{
+  display: grid;
+  grid-template-columns: 300px 1fr;
+}
 </style>
+
