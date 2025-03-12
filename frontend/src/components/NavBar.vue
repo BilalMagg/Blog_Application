@@ -2,15 +2,14 @@
   <nav class="navbar">
     <!-- Logo et nom -->
     <div class="logo-container">
-
       <router-link to="/" ><i class="fa-solid fa-house"  ></i></router-link>
     </div>
-  
-
 
     <!-- Actions utilisateur -->
     <div class="actions">
-      <template v-if="isAuthenticated">
+
+      
+    <template v-if="isAuthenticated">
       <!-- Bouton "Ask a question" -->
       <router-link to="/create">
       <button class="ask-button">
@@ -45,15 +44,15 @@
           <router-link to="/SignIn" class="logout">Logout</router-link>
         </div>
       </div>
-    </template>
+  </template>
     
-    <template v-else>
+  <template v-else>
       <!-- Boutons Register et Login -->
 
       <router-link to="/SignIn"><button class="register-button">➜ Register</button></router-link>
       <router-link to="/SignIn"><button class="login-button">Login</button></router-link>
 
-    </template>
+  </template>
     </div>
   </nav>
   
@@ -62,10 +61,10 @@
 <script>
 
 import { ref, onMounted, onUnmounted } from "vue";
-//import { BellIcon } from "@heroicons/vue/outline";
+
 
 export default {
-  //components: { BellIcon },
+
   setup() {
     // État du menu déroulant
     const dropdownOpen = ref(false);
