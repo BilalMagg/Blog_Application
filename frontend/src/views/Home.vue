@@ -75,9 +75,9 @@ export default {
 <style scoped>
 
 .home-container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 100vh;
   text-align: center;
 }
 
