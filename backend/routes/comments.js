@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const commentController = require('../controllers/commentControllers');
+
 const authenticateJWT=require('../middleware/authentification')
 
 router.post('/post/:id/user/:id',authenticateUser,commentController.createComment);
