@@ -5,10 +5,10 @@ const postController = require('../controllers/postController');
 
 // Définition des routes CRUD pour les posts:
 // router.post('/', authMiddleware, postController.createPost);
-router.post('/', postController.createPost);
-router.get('/', postController.getAllPosts);
-router.get('/:id', postController.getPostById);
+router.post('/', authenticateUser , postController.createPost);
+router.get('/', authenticateUser,  postController.getAllPosts);
+router.get('/:id', authenticateUser, postController.getPostById);
 // router.put('/:id', authMiddleware, postController.updatePost);
-router.delete('/:id', postController.deletePost);
+router.delete('/:id', authenticateUser, postController.deletePost);
 
 module.exports = router;
