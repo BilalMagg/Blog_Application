@@ -8,6 +8,9 @@ const userRoutes = require('./routes/users');
 const commentRoutes = require('./routes/comments');
 const voteRoutes = require('./routes/votes');
 
+const contentSanitizer = require('./middlewares/sanitation');
+const passwordValidator = require('./middlewares/verifyPWT');
+
 app.use(express.json());
 app.use(cors());
 
