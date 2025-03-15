@@ -113,7 +113,7 @@ exports.deletecommentbyuser = async (req, res) => {
 };
 
 exports.deletecommentbypostuser = async (req, res) => {
-    try {
+    try { 
         const { user_id, post_id } = req.params;
         await Comment.delete({ user_id, post_id });
         res.status(200).json({ message: "les commentaires de ce post et de ce utilisateur sont supprimés " });
