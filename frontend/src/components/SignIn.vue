@@ -23,6 +23,7 @@
         <input type="text" placeholder="Username" v-model="username" required />
         <input type="email" placeholder="Email" v-model="email" required />
         <input type="password" placeholder="Password" v-model="password" required />
+        <input type="password" placeholder="ConfirmPassword" v-model="ConfirmPassword">
 
         <!-- Success Message -->
         <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
@@ -90,14 +91,19 @@ export default {
 
     // Registration Method
     async register() {
+      // Validate password confirmation
+      /*if (this.password !== this.confirmPassword) {
+        this.errorMessage = '❌ Passwords do not match.';
+        return;
+      } */
       try {
-        /*const response = await axios.post('http://localhost:3000/register', {
+        const response = await axios.post('http://localhost:3000/register', {
           username: this.username,
           email: this.email,
           password: this.password,
           role: 'user' // Default role
-        });*/
-        const response = { data: { success: true } };
+        }); 
+         /* const response = { data: { success: true } }; */
 
         if (response.data.success) {
           this.successMessage = '🎉 Congratulations! Your account has been created. Now you can login to Your account';
@@ -110,6 +116,7 @@ export default {
           this.errorMessage = '❌ Registration failed. Please try again.';
         }
       } catch (error) {
+        res.status(500).json({Message: error.message });
         if (error.response && !error.response.data.success) {
           this.errorMessage = '❌ User already exists.';
         } else {
@@ -129,7 +136,7 @@ export default {
 
         if (response.data.success) {
           localStorage.setItem('token', response.data.token); // Store the token
-          this.$router.push('/user'); // Redirect to User page if login is successful
+          this.$router.push('/'); // Redirect to User page if login is successful
         } else {
           this.loginErrorMessage = '❌ Incorrect email or password. Please try again.';
         }
