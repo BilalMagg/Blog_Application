@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "CreatePost",
   data() {
@@ -19,96 +21,38 @@ export default {
     };
   },
   methods: {
-    uploadPost() {
+    async uploadPost() {
       if (!this.newPost.title || !this.newPost.content) return;
 
-      let posts = JSON.parse(localStorage.getItem("posts")) || [];
-
-      if (this.isEditing) {
-        // ✅ Update existing post
-        posts = posts.map(post =>
-          post.id === this.newPost.id ? this.newPost : post
-        );
-      } else {
-        // ✅ Create new post
-        this.newPost.id = Date.now();
-        posts.unshift(this.newPost);
+      try {
+        if (this.isEditing) {
+          await axios.put(`http://localhost:3000/posts/${this.newPost.id}`, this.newPost);
+        } else {
+          await axios.post("http://localhost:3000/posts", this.newPost);
+        }
+      } catch (error) {
+        console.error("Failed to save post:", error);
       }
 
-      localStorage.setItem("posts", JSON.stringify(posts));
       this.$router.push("/");
     },
 
     loadPostToEdit() {
       const postId = this.$route.params.id;
       if (postId) {
-        let posts = JSON.parse(localStorage.getItem("posts")) || [];
-        const existingPost = posts.find(post => post.id == postId);
-        if (existingPost) {
-          this.newPost = { ...existingPost };
-          this.isEditing = true;
-        }
+        axios.get(`http://localhost:3000/posts/${postId}`)
+          .then(response => {
+            this.newPost = response.data;
+            this.isEditing = true;
+          })
+          .catch(() => console.error("Failed to load post"));
       }
     }
-    /*
-async uploadPost() {
-  if (!this.newPost.title || !this.newPost.content) return;
-
-  try {
-    const response = await fetch("https://your-api.com/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(this.newPost)
-    });
-
-    if (!response.ok) throw new Error("Failed to upload post");
-
-    const newPost = await response.json();
-    console.log("Post uploaded:", newPost);
-
-    this.$router.push("/"); // ✅ Redirect to homepage after posting
-  } catch (error) {
-    console.error("Error uploading post:", error);
-  }
-}
-*/
-
-/*
-async uploadPost() {
-  if (!this.newPost.title || !this.newPost.content) return;
-
-  let apiUrl = "https://your-api.com/posts";
-  let method = "POST"; // Default to creating a new post
-
-  if (this.isEditing) {
-    apiUrl = `https://your-api.com/posts/${this.newPost.id}`;
-    method = "PUT"; // Change to updating a post
-  }
-
-  try {
-    const response = await fetch(apiUrl, {
-      method: method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(this.newPost)
-    });
-
-    if (!response.ok) throw new Error("Failed to save post");
-
-    const savedPost = await response.json();
-    console.log("Post saved:", savedPost);
-
-    this.$router.push("/"); 
-  } catch (error) {
-    console.error("Error saving post:", error);
-  }
-}
-*/
-
-
   },
 
   mounted() {
-    this.loadPostToEdit(); }
+    this.loadPostToEdit();
+  }
 };
 </script>
 
@@ -119,13 +63,15 @@ async uploadPost() {
   padding: 20px;
   text-align: center;
 }
+
 input, textarea {
   width: 100%;
   margin-bottom: 10px;
   padding: 10px;
 }
+
 button {
-  background: #42b983;
+  background: green;
   color: white;
   padding: 10px 15px;
   border: none;

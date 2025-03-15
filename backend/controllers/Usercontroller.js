@@ -11,9 +11,9 @@ const registerUser=async (req,res)=>{
   if(exist){
     return res.status(400).json({message :"user already exists"});
   }
-  //hashing the password
+  
  const hashedpassword=await bcrypt.hash(password,10);
- //create new user
+
  const newuser=await User.create({
   username,
   email,
@@ -74,5 +74,37 @@ const getallUserProfile=async (req,res)=>{
   res.status(500).json({ message: "server error"});
  }
 }
+const requestResetCode = async (email) => {
+  const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+
+  if (user.rows.length === 0) {
+    return false; 
+  }
+
+  const code = Math.floor(100000 + Math.random() * 900000).toString(); 
+
+  await transporter.sendMail({
+    from: 'your_email@gmail.com',
+    to: email,
+    subject: 'Password Reset Code',
+    text: `Your reset code is: ${code}`,
+  });
+
+  return true; 
+};
+const resetPassword = async (email, code, newPassword) => {
+  if (!verifyResetCode(email, code)) {
+    return false; 
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await pool.query('UPDATE users SET password = $1 WHERE email = $2', [hashedPassword, email]);
+  
+  resetCodes.delete(email); 
+
+  return true; 
+};
+
+
 
 module.exports = { registerUser, loginUser, getUserProfile, getallUserProfile};
