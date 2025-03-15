@@ -7,7 +7,8 @@
     "dev": "nodemon server.js",
     "db:sync": "nodemon server.js",
     "db:migrate": "npx sequelize-cli db:migrate --config config/database.js",
-    "db:seed": "npx sequelize-cli db:seed:all --config config/database.js"
+    "db:seed": "npx sequelize-cli db:seed:all --config config/database.js",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
