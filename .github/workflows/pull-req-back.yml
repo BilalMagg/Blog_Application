@@ -1,0 +1,47 @@
+name: BLOG-APPLICATION CI/CD - Auto Pull Request
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+      - 'models/*'
+      - 'middleware'
+    paths:
+      - 'backend/**'  
+
+jobs:
+  build-and-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'  
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm install   
+      - name: Run linter
+        working-directory: ./backend
+        run: npm run lint  # Vérifie que ce script existe dans package.json
+
+      - name: Run tests
+        working-directory: ./backend
+        run: npm test  # Vérifie que ce script existe dans package.json
+
+      - name: Create Pull Request
+        if: success()  # Crée la PR seulement si tout réussit
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "Mise à jour backend pour BLOG-APPLICATION"
+          title: "[BLOG-APPLICATION] PR Auto depuis ${{ github.ref_name }}"
+          body: |
+            Pull request automatique pour BLOG-APPLICATION :
+            - Modifications dans controllers, middlewares, routes (comments.js, posts.js, userroutes.js)
+            - Migrations mises à jour
+          branch: ${{ github.ref_name }}  # Branche source (ex: feature/backend)
+          base: main  # Branche cible (change en develop si beso
+          token: ${{ secrets.GITHUB_TOKEN }}
