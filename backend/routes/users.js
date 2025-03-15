@@ -13,5 +13,6 @@ router.post('/login',verifyPWT,loginUser);
  //route de profile
 router.get('/profile',getUserProfile);
 router.get('/',getallUserProfile);
+ 
 
 module.exports=router;
